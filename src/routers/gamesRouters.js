@@ -1,8 +1,10 @@
 import { Router } from "express";
 
-const router= Router();
+import { getGames, postGames } from "../controllers/gamesControllers";
 
-router.get("/games", );
-router.post("/games", );
+const router = Router();
+
+router.get("/games", getGames);
+router.post("/games", postGames);
 
 export default router;

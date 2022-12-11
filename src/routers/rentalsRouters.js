@@ -1,10 +1,17 @@
 import { Router } from "express";
 
-const router= Router();
+import {
+  getRentals,
+  postRentals,
+  putRentals,
+  deleteRentals,
+} from "../controllers/rentalsControllers";
 
-router.get("/rentals", );
-router.post("/rentals", );
-router.put("/rentals", );
-router.delete("/rentals", );
+const router = Router();
+
+router.get("/rentals", getRentals);
+router.post("/rentals", postRentals);
+router.put("/rentals", putRentals);
+router.delete("/rentals", deleteRentals);
 
 export default router;

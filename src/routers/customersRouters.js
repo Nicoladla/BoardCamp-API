@@ -1,9 +1,15 @@
 import { Router } from "express";
 
-const router= Router();
+import {
+  getCustomers,
+  postCustomers,
+  putCustomers,
+} from "../controllers/customersControllers";
 
-router.get("/customers", );
-router.post("/customers", );
-router.put("/customers", );
+const router = Router();
+
+router.get("/customers", getCustomers);
+router.post("/customers", postCustomers);
+router.put("/customers", putCustomers);
 
 export default router;

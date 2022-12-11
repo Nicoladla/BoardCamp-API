@@ -4,7 +4,7 @@ import {
   getCustomers,
   postCustomers,
   putCustomers,
-} from "../controllers/customersControllers";
+} from "../controllers/customersControllers.js";
 
 const router = Router();
 

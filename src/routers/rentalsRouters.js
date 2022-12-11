@@ -5,7 +5,7 @@ import {
   postRentals,
   putRentals,
   deleteRentals,
-} from "../controllers/rentalsControllers";
+} from "../controllers/rentalsControllers.js";
 
 const router = Router();
 

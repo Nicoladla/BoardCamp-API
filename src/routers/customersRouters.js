@@ -1,4 +1,5 @@
 import { Router } from "express";
+import customerValidation from "../middlewares/customerValidationMiddlewares.js";
 
 import {
   getCustomers,
@@ -9,7 +10,7 @@ import {
 const router = Router();
 
 router.get("/customers", getCustomers);
-router.post("/customers", postCustomers);
-router.put("/customers", putCustomers);
+router.post("/customers", customerValidation, postCustomers);
+router.put("/customers/:id", customerValidation, putCustomers);
 
 export default router;

@@ -13,7 +13,18 @@ export async function postCustomers(req, res) {
       return res.status(400).send(errors);
     }
 
-    
+    const customerCpfExist = await connection.query(
+      `SELECT cpf FROM customers WHERE cpf=$1;`,
+      [customer.name]
+    );
+    if (customerCpfExist.rows[0]?.cpf) {
+      return res.status(409).send("CPF já cadastrado");
+    }
+
+    await connection.query(
+      `INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4)`,
+      [customer.name, customer.phone, customer.cpf, customer.birthday]
+    );
 
     res.sendStatus(201);
   } catch (err) {

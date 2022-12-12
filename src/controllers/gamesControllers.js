@@ -1,7 +1,23 @@
 import connection from "../database/db.js";
 import gamesSchema from "../models/gamesSchema.js";
 
-export async function getGames(req, res) {}
+export async function getGames(req, res) {
+  try {
+    const games = await connection.query(
+      `SELECT 
+        games.*, categories.name AS "categoryName"
+      FROM 
+        games JOIN categories 
+      ON 
+        games."categoryId" = categories.id;`
+    );
+
+    res.status(200).send(games.rows);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
 
 export async function postGames(req, res) {
   const game = req.body;
@@ -27,10 +43,15 @@ export async function postGames(req, res) {
       `SELECT name FROM games WHERE name ILIKE '%'||$1||'%';`,
       [game.name]
     );
-    if (gameExist) return res.status(409).send("Jogo com nome já existente");
+    if (gameExist.rows[0]?.name) {
+      return res.status(409).send("Jogo com nome já existente");
+    }
 
     await connection.query(
-      `INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1, $2, $3, $4, $5);`,
+      `INSERT INTO games 
+        (name, image, "stockTotal", "categoryId", "pricePerDay") 
+      VALUES 
+        ($1, $2, $3, $4, $5);`,
       [
         game.name,
         game.image,

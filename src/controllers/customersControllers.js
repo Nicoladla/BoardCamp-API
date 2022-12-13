@@ -27,6 +27,14 @@ export async function putCustomers(req, res) {
       return res.status(400).send("Id do cliente inválido!");
     }
 
+    const idCustomersExist = await connection.query(
+      `SELECT id FROM customers WHERE id=$1`,
+      [id]
+    );
+    if (!idCustomersExist.rows[0]?.id) {
+      return res.status(400).send("Id do cliente inválido!");
+    }
+
     await connection.query(
       `UPDATE customers SET name=$1, phone=$2, cpf=$3, birthday=$4 WHERE id=$5`,
       [name, phone, cpf, birthday, id]

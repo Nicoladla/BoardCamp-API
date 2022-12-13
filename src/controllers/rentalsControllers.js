@@ -50,7 +50,7 @@ export async function postRentals(req, res) {
   }
 }
 
-export async function putRentals(req, res) {
+export async function patchRentals(req, res) {
   const { id } = req.params;
 
   try {
@@ -96,4 +96,31 @@ export async function putRentals(req, res) {
   }
 }
 
-export async function deleteRentals(req, res) {}
+export async function deleteRentals(req, res) {
+  const { id } = req.params;
+
+  try {
+    if (isNaN(id)) {
+      return res.status(400).send("Id do aluguel inválido!");
+    }
+
+    const idRentalsExist = await connection.query(
+      `SELECT id, "returnDate" FROM rentals WHERE id=$1`,
+      [id]
+    );
+    if (!idRentalsExist.rows[0]?.id) {
+      return res.status(404).send("Aluguel não encontrado!");
+    }
+
+    if (!idRentalsExist.rows[0].returnDate) {
+      return res.status(400).send("O aluguel não está encerrado!");
+    }
+
+    await connection.query(`DELETE FROM rentals WHERE id=$1;`, [id]);
+
+    res.sendStatus(200);
+  } catch (err) {
+    res.sendStatus(500);
+    console.log(err);
+  }
+}

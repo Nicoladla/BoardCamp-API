@@ -4,7 +4,7 @@ import rentalsValidationMiddleware from "../middlewares/rentalsValidationMiddlew
 import {
   getRentals,
   postRentals,
-  putRentals,
+  patchRentals,
   deleteRentals,
 } from "../controllers/rentalsControllers.js";
 
@@ -12,7 +12,7 @@ const router = Router();
 
 router.get("/rentals", getRentals);
 router.post("/rentals", rentalsValidationMiddleware, postRentals);
-router.put("/rentals/:id/return", putRentals);
-router.delete("/rentals", deleteRentals);
+router.patch("/rentals/:id/return", patchRentals);
+router.delete("/rentals/:id", deleteRentals);
 
 export default router;

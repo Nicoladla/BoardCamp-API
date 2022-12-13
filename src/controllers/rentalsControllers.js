@@ -8,7 +8,7 @@ export async function postRentals(req, res) {
   try {
     await connection.query(
       `INSERT INTO rentals 
-        (customerId, gameId, daysRented, rentDate, returnDate, delayFee, originalPrice)
+        ("customerId", "gameId", "daysRented", "rentDate", "returnDate", "delayFee", "originalPrice")
        VALUES 
         ($1, $2, $3, $4, $5, $6, $7);`,
       [

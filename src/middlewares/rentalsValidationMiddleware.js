@@ -7,7 +7,7 @@ export default async function (req, res, next) {
 
   try {
     const customerExist = await connection.query(
-      `SELECT id FROM customers WHERE id=$1`,
+      `SELECT id FROM customers WHERE id=$1;`,
       [customerId]
     );
     if (!customerExist.rows[0]?.id) {
@@ -15,11 +15,21 @@ export default async function (req, res, next) {
     }
 
     const gameExist = await connection.query(
-      `SELECT * FROM games WHERE id=$1`,
+      `SELECT * FROM games WHERE id=$1;`,
       [gameId]
     );
     if (!gameExist.rows[0]?.id) {
       return res.status(400).send("Jogo não existente!");
+    }
+
+    const rentalsExisting = await connection.query(
+      `SELECT * FROM rentals WHERE "gameId"=$1;`,
+      [gameId]
+    );
+    const gameIsAvailable =
+      rentalsExisting.rows.length < gameExist.rows[0].stockTotal;
+    if (!gameIsAvailable) {
+      return res.status(400).send("Jogo indisponível.");
     }
 
     const year = dayjs().year();

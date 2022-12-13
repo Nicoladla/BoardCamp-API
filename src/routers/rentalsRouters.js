@@ -1,4 +1,5 @@
 import { Router } from "express";
+import rentalsValidationMiddleware from "../middlewares/rentalsValidationMiddleware.js";
 
 import {
   getRentals,
@@ -10,7 +11,7 @@ import {
 const router = Router();
 
 router.get("/rentals", getRentals);
-router.post("/rentals", postRentals);
+router.post("/rentals", rentalsValidationMiddleware, postRentals);
 router.put("/rentals", putRentals);
 router.delete("/rentals", deleteRentals);
 

@@ -21,19 +21,19 @@ export default async function (req, res, next) {
     if (!gameExist.rows[0]?.id) {
       return res.status(400).send("Jogo não disponível!");
     }
-    console.log("preço por dia", gameExist.rows[0].pricePerDay);
 
     const year = dayjs().year();
     const month = dayjs().month() + 1;
     const day = dayjs().date();
 
+    const currentDate = `${year}-${month}-${day}`;
     const originalPrice = daysRented * gameExist.rows[0].pricePerDay;
 
     const rentals = {
       customerId,
       gameId,
       daysRented,
-      rentDate: `${year}-${month}-${day}`,
+      rentDate: currentDate,
       returnDate: null,
       delayFee: null,
       originalPrice,

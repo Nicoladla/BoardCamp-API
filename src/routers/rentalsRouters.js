@@ -12,7 +12,7 @@ const router = Router();
 
 router.get("/rentals", getRentals);
 router.post("/rentals", rentalsValidationMiddleware, postRentals);
-router.put("/rentals", putRentals);
+router.put("/rentals/:id/return", putRentals);
 router.delete("/rentals", deleteRentals);
 
 export default router;

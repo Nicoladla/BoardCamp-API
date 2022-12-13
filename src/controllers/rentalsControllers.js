@@ -1,6 +1,22 @@
 import connection from "../database/db.js";
 
-export async function getRentals(req, res) {}
+export async function getRentals(req, res) {
+  try {
+    const rentals = await connection.query(
+      `SELECT 
+        rentals.*, customers.id AS idc, customers.name
+      FROM 
+        rentals JOIN customers 
+      ON 
+        rentals."customerId" = customers.id`
+    );
+
+    res.status(200).send(rentals.rows);
+  } catch (err) {
+    res.sendStatus(500);
+    console.log(err);
+  }
+}
 
 export async function postRentals(req, res) {
   const { rentals } = res.locals;

@@ -19,7 +19,7 @@ export default async function (req, res, next) {
       [gameId]
     );
     if (!gameExist.rows[0]?.id) {
-      return res.status(400).send("Jogo não disponível!");
+      return res.status(400).send("Jogo não existente!");
     }
 
     const year = dayjs().year();

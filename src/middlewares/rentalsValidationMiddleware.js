@@ -23,7 +23,7 @@ export default async function rentalsValidation(req, res, next) {
     }
 
     const rentalsExisting = await connection.query(
-      `SELECT * FROM rentals WHERE "gameId"=$1;`,
+      `SELECT * FROM rentals WHERE "gameId"=$1 AND "returnDate" IS null;`,
       [gameId]
     );
     const gameIsAvailable =

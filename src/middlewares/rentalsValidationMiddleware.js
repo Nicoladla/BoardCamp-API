@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import connection from "../database/db.js";
 import rentalsSchema from "../models/rentalsSchema.js";
 
-export default async function (req, res, next) {
+export default async function rentalsValidation(req, res, next) {
   const { customerId, gameId, daysRented } = req.body;
 
   try {

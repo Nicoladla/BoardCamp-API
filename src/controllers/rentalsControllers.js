@@ -52,21 +52,11 @@ export async function postRentals(req, res) {
 
 export async function patchRentals(req, res) {
   const { id } = req.params;
+  const { returnDate, rentDate, daysRented, originalPrice } =
+    res.locals.rentals;
 
   try {
-    if (isNaN(id)) {
-      return res.status(400).send("Id do aluguel inválido!");
-    }
-
-    const idRentalsExist = await connection.query(
-      `SELECT * FROM rentals WHERE id=$1`,
-      [id]
-    );
-    if (!idRentalsExist.rows[0]?.id) {
-      return res.status(404).send("Aluguel não encontrado!");
-    }
-
-    if (idRentalsExist.rows[0].returnDate) {
+    if (returnDate) {
       return res.status(400).send("Aluguel já encerrado!");
     }
 
@@ -75,7 +65,6 @@ export async function patchRentals(req, res) {
     const day = dayjs().date();
 
     const currentDate = `${year}-${month}-${day}`;
-    const { rentDate, daysRented, originalPrice } = idRentalsExist.rows[0];
 
     const daysOfUse = dayjs(currentDate).diff(rentDate, "day");
     let delayFee = 0;
@@ -98,21 +87,10 @@ export async function patchRentals(req, res) {
 
 export async function deleteRentals(req, res) {
   const { id } = req.params;
+  const { returnDate } = res.locals.rentals;
 
   try {
-    if (isNaN(id)) {
-      return res.status(400).send("Id do aluguel inválido!");
-    }
-
-    const idRentalsExist = await connection.query(
-      `SELECT id, "returnDate" FROM rentals WHERE id=$1`,
-      [id]
-    );
-    if (!idRentalsExist.rows[0]?.id) {
-      return res.status(404).send("Aluguel não encontrado!");
-    }
-
-    if (!idRentalsExist.rows[0].returnDate) {
+    if (!returnDate) {
       return res.status(400).send("O aluguel não está encerrado!");
     }
 

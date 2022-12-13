@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import connection from "../database/db.js";
+import CurrentDate from "../helpers/currentDateHelpers.js";
 import rentalsSchema from "../models/rentalsSchema.js";
 
 export default async function rentalsValidation(req, res, next) {
@@ -32,11 +32,7 @@ export default async function rentalsValidation(req, res, next) {
       return res.status(400).send("Jogo indisponível.");
     }
 
-    const year = dayjs().year();
-    const month = dayjs().month() + 1;
-    const day = dayjs().date();
-
-    const currentDate = `${year}-${month}-${day}`;
+    const currentDate = CurrentDate();
     const originalPrice = daysRented * gameExist.rows[0].pricePerDay;
 
     const rentals = {

@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import connection from "../database/db.js";
+import CurrentDate from "../helpers/currentDateHelpers.js";
 
 export async function getRentals(req, res) {
   try {
@@ -60,11 +61,7 @@ export async function patchRentals(req, res) {
       return res.status(400).send("Aluguel já encerrado!");
     }
 
-    const year = dayjs().year();
-    const month = dayjs().month() + 1;
-    const day = dayjs().date();
-
-    const currentDate = `${year}-${month}-${day}`;
+    const currentDate = CurrentDate();
 
     const daysOfUse = dayjs(currentDate).diff(rentDate, "day");
     let delayFee = 0;

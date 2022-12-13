@@ -1,3 +1,5 @@
+import connection from "../database/db.js";
+
 export default async function rentalsIdValidation(req, res, next) {
   const { id } = req.params;
 

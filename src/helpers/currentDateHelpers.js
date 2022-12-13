@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-export default function currentDate() {
+export default function CurrentDate() {
   const year = dayjs().year();
   const month = dayjs().month() + 1;
   const day = dayjs().date();

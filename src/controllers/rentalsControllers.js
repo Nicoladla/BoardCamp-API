@@ -6,18 +6,45 @@ export async function getRentals(req, res) {
   try {
     const rentals = await connection.query(
       `SELECT 
-        rentals.*, customers.id AS idc, customers.name
+        rentals.*, 
+        customers.name AS "customerName", 
+        games.name AS "gameName", games."categoryId",
+        categories.name AS "categoryName"
       FROM 
         rentals JOIN customers 
       ON 
-        rentals."customerId" = customers.id`
+        rentals."customerId" = customers.id
+      JOIN
+        games
+      ON
+        rentals."gameId" = games.id
+      JOIN
+        categories
+      ON
+        games."categoryId" = categories.id;`
     );
-    rentals.rows = {
-      ...rentals.rows,
-      customer: { id: rentals.rows.idc, name: rentals.rows.name },
-    };
 
-    res.status(200).send(rentals.rows);
+    const newRentals = rentals.rows.map((rental) => {
+      return {
+        ...rental,
+        customer: {
+          id: rental.customerId,
+          name: rental.customerName,
+        },
+        game: {
+          id: rental.gameId,
+          name: rental.gameName,
+          categoryId: rental.categoryId,
+          categoryName: rental.categoryName,
+        },
+        customerName: undefined,
+        gameName: undefined,
+        categoryId: undefined,
+        categoryName: undefined,
+      };
+    });
+
+    res.status(200).send(newRentals);
   } catch (err) {
     res.sendStatus(500);
     console.log(err);

@@ -3,6 +3,19 @@ import connection from "../database/db.js";
 import CurrentDate from "../helpers/currentDateHelpers.js";
 
 export async function getRentals(req, res) {
+  let { customerId } = req.query;
+  let { gameId } = req.query;
+  console.log(gameId);
+
+  if (!customerId && !gameId) {
+    customerId = "";
+    gameId = "";
+  } else if (!customerId) {
+    customerId = "";
+  } else if (!gameId) {
+    gameId = "";
+  }
+
   try {
     const rentals = await connection.query(
       `SELECT 
@@ -21,7 +34,8 @@ export async function getRentals(req, res) {
       JOIN
         categories
       ON
-        games."categoryId" = categories.id;`
+        games."categoryId" = categories.id`,
+      []
     );
 
     const newRentals = rentals.rows.map((rental) => {
@@ -78,7 +92,7 @@ export async function postRentals(req, res) {
   }
 }
 
-export async function patchRentals(req, res) {
+export async function postPatchRentals(req, res) {
   const { id } = req.params;
   const { returnDate, rentDate, daysRented, originalPrice } =
     res.locals.rentals;

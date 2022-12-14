@@ -37,6 +37,14 @@ export async function postCustomers(req, res) {
   const { name, phone, cpf, birthday } = req.body;
 
   try {
+    const customerCpfExist = await connection.query(
+      `SELECT cpf FROM customers WHERE cpf=$1;`,
+      [cpf]
+    );
+    if (customerCpfExist.rows[0]?.cpf) {
+      return res.status(409).send("CPF já cadastrado");
+    }
+
     await connection.query(
       `INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4)`,
       [name, phone, cpf, birthday]

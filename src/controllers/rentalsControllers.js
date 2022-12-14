@@ -5,38 +5,78 @@ import CurrentDate from "../helpers/currentDateHelpers.js";
 export async function getRentals(req, res) {
   let { customerId } = req.query;
   let { gameId } = req.query;
-  console.log(gameId);
-
-  if (!customerId && !gameId) {
-    customerId = "";
-    gameId = "";
-  } else if (!customerId) {
-    customerId = "";
-  } else if (!gameId) {
-    gameId = "";
-  }
 
   try {
-    const rentals = await connection.query(
-      `SELECT 
-        rentals.*, 
-        customers.name AS "customerName", 
-        games.name AS "gameName", games."categoryId",
-        categories.name AS "categoryName"
-      FROM 
-        rentals JOIN customers 
-      ON 
-        rentals."customerId" = customers.id
-      JOIN
-        games
-      ON
-        rentals."gameId" = games.id
-      JOIN
-        categories
-      ON
-        games."categoryId" = categories.id`,
-      []
-    );
+    let rentals;
+
+    if (customerId) {
+      rentals = await connection.query(
+        `SELECT 
+          rentals.*, 
+          customers.name AS "customerName", 
+          games.name AS "gameName", games."categoryId",
+          categories.name AS "categoryName"
+        FROM 
+          rentals JOIN customers 
+        ON 
+          rentals."customerId" = customers.id
+        JOIN
+          games
+        ON
+          rentals."gameId" = games.id
+        JOIN
+          categories
+        ON
+          games."categoryId" = categories.id
+        WHERE
+          "customerId" = $1;`,
+        [customerId]
+      );
+    } else if (gameId) {
+      rentals = await connection.query(
+        `SELECT 
+          rentals.*, 
+          customers.name AS "customerName", 
+          games.name AS "gameName", games."categoryId",
+          categories.name AS "categoryName"
+        FROM 
+          rentals JOIN customers 
+        ON 
+          rentals."customerId" = customers.id
+        JOIN
+          games
+        ON
+          rentals."gameId" = games.id
+        JOIN
+          categories
+        ON
+          games."categoryId" = categories.id
+        WHERE
+          "gameId" = $1;`,
+        [gameId]
+      );
+    } else {
+      rentals = await connection.query(
+        `SELECT 
+          rentals.*, 
+          customers.name AS "customerName", 
+          games.name AS "gameName", games."categoryId",
+          categories.name AS "categoryName"
+        FROM 
+          rentals JOIN customers 
+        ON 
+          rentals."customerId" = customers.id
+        JOIN
+          games
+        ON
+          rentals."gameId" = games.id
+        JOIN
+          categories
+        ON
+          games."categoryId" = categories.id`,
+        []
+      );
+    }
 
     const newRentals = rentals.rows.map((rental) => {
       return {
